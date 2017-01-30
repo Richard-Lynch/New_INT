@@ -53,25 +53,25 @@ int inv_mod(int x, int y)
     return a;
 }
 
-/* return (a^b) mod m */
-int pow_mod(int a, int b, int m)
+/* return (a^b) mod m - FOUND ONLINE*/ 
+int pow_mod(int a, int b, int mod)
 {
-    int r, aa;
+    int result, aa;
 
-    r = 1;
+    result = 1;
     aa = a;
     while (1) {
     if (b & 1)
-        r = mul_mod(r, aa, m);
+        result = mul_mod(result, aa, mod);
     b = b >> 1;
     if (b == 0)
         break;
-    aa = mul_mod(aa, aa, m);
+    aa = mul_mod(aa, aa, mod);
     }
-    return r;
+    return result;
 }
 
-/* return true if n is prime */
+/* return true if n is prime - FOUND ONLINE*/
 int is_prime(int n)
 {
     int r, i;
@@ -85,7 +85,7 @@ int is_prime(int n)
     return 1;
 }
 
-/* return the prime number immediatly after n */
+/* return the prime number immediatly after n - FOUND ONLINE*/
 int next_prime(int n)
 {
     do {
@@ -99,7 +99,9 @@ int main(int argc, char *argv[])
     int av, a, vmax, N, n, num, den, k, kq, kq2, t, v, s, i;
     double sum;
 
-    if (argc < 2 || (n = atoi(argv[1])) <= 0) {
+    
+    if (argc < 2 || (n = atoi(argv[1])) <= 0) { //convert the first arg to an int and set n
+        //if there is not arg entered
     printf("This program computes the n'th decimal digit of \\pi\n"
            "usage: pi n , where n is the digit you want\n");
     exit(1);
