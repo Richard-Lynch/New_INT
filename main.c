@@ -33,7 +33,7 @@
 #define mul_mod(a, b, m) fmod((double)a *(double)b, m)
 #endif
 
-int NUM_THREADS = 6.00L;
+int NUM_THREADS = 2;
 int *results;
 int curr_x = 0;
 int MAX_INDEX;
@@ -297,21 +297,13 @@ int main(int argc, char *argv[])
             printf("Joined thread: %d\n", t);
         }
     }
-    
+
     printf("Finished Joining threads\n");
     // stop the cock
     clock_t tdiff = clock() - start;
 
     // output result
     printf("---RESULTS----\n");
-    printf("Fucntion: “Bailey-Borwein-Plouffe” (BBP)\n");
-    char pi_string[] = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679";
-    printf("Actual: %s\n", pi_string);
-    // output time
-    long double msec = tdiff * 1000.00L / CLOCKS_PER_SEC;
-    printf("Time taken %d seconds %d milliseconds \n", (int)msec / 1000, (int)msec % 1000);
-    printf("Time taken %.10Lf Miliseconds\n", msec);
-
     pthread_mutex_lock(&sum_lock);
     // buffer and print pi
     char buffer[10];
@@ -328,6 +320,17 @@ int main(int argc, char *argv[])
     sprintf(BigBuffer, "%s%.*s", BigBuffer, remain, buffer);
     printf("%.*s\n", remain, buffer);
     printf("\nBig Buffer\nResult: 3.%s\n\n", BigBuffer);
+
+    printf("---RESULTS----\n");
+    printf("Fucntion: “Bailey-Borwein-Plouffe” (BBP)\n");
+    printf("Number of Threads: %d\n", NUM_THREADS);
+
+    // char pi_string[] = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679";
+    // printf("Actual: %s\n", pi_string);
+// output time
+    long double msec = tdiff * 1000.00L / CLOCKS_PER_SEC;
+    printf("Time taken %d seconds %d milliseconds \n", (int)msec / 1000, (int)msec % 1000);
+    printf("Time taken %.10Lf Miliseconds\n\n", msec);
 
     // find any digit of pi within range
     char digit_index[5];
