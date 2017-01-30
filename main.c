@@ -19,13 +19,34 @@
     #include <math.h>
 
 /* uncomment the following line to use 'long long' integers */
-/* #define HAS_LONG_LONG */
+#define HAS_LONG_LONG
 
 #ifdef HAS_LONG_LONG
 #define mul_mod(a,b,m) (( (long long) (a) * (long long) (b) ) % (m))
 #else
 #define mul_mod(a,b,m) fmod( (double) a * (double) b, m)
 #endif
+
+
+// -------
+#include <pthread.h>
+#include <time.h>
+
+// int NUM_DIGITS = 9;
+int NUM_THREADS = 6.00L;
+long double reS = 3.14159265359L;
+int* results;
+int curr_n =1;
+
+pthread_mutex_t num_threads_lock;
+pthread_mutex_t sum_lock;
+pthread_mutex_t curr_x_lock;
+
+long double curr_x = 1.00L;
+long double sum = 0;
+
+
+// ----------
 
 /* return the inverse of x mod y */
 int inv_mod(int x, int y)
@@ -94,19 +115,12 @@ int next_prime(int n)
     return n;
 }
 
-int main(int argc, char *argv[])
-{
+// 
+void* calc(void* n_pos){
     int av, a, vmax, N, n, num, den, k, kq, kq2, t, v, s, i;
     double sum;
 
-    
-    if (argc < 2 || (n = atoi(argv[1])) <= 0) { //convert the first arg to an int and set n
-        //if there is not arg entered
-    printf("This program computes the n'th decimal digit of \\pi\n"
-           "usage: pi n , where n is the digit you want\n");
-    exit(1);
-    }
-
+    n = *(int*)n_pos;
     N = (int) ((n + 20) * log(10) / log(2));
 
     sum = 0;
@@ -168,7 +182,37 @@ int main(int argc, char *argv[])
     s = mul_mod(s, t, av);
     sum = fmod(sum + (double) s / (double) av, 1.0);
     }
-    printf("Decimal digits of pi at position %d: %09d\n", n,
-       (int) (sum * 1e9));
+    //    (int) (sum * 1e9));
+    int* curr = malloc(sizeof(int));
+    *curr = (sum * 1e9);
+    printf("Decimal digits of pi at position %d: %09d\n", n, *curr);
+    return (void*)curr;
+    // pthread_exit((void*)curr); 
+    
+}
+
+int main(int argc, char *argv[])
+{
+    int n_digits = atoi(argv[1]);
+    int n_ints = n_digits/9;
+    if(n_digits % 9 != 0){
+        n_ints++; 
+    }
+    results = malloc(sizeof(int)*n_ints);
+
+    
+
+    // if (argc < 2 || (n = atoi(argv[1])) <= 0) { //convert the first arg to an int and set n
+    //     //if there is not arg entered
+    // printf("This program computes the n'th decimal digit of \\pi\n"
+    //        "usage: pi n , where n is the digit you want\n");
+    // exit(1);
+    // }
+
+
+
+    calc((void*)(&curr_n));
+
+
     return 0;
 }
